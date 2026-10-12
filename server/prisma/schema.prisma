@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  meals        Meal[]
+  workouts     Workout[]
+  goals        Goal[]
+}
+
+model Meal {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String   @db.VarChar(80)
+  consumedAt  DateTime @default(now())
+  calories    Int
+  proteinGrams Decimal @db.Decimal(7, 2)
+  carbsGrams   Decimal @db.Decimal(7, 2)
+  fatGrams     Decimal @db.Decimal(7, 2)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, consumedAt])
+}
+
+model Workout {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String   @db.VarChar(100)
+  durationMin Int
+  performedAt DateTime @default(now())
+  notes       String?  @db.VarChar(1000)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, performedAt])
+}
+
+model Goal {
+  id            String   @id @default(cuid())
+  userId        String
+  effectiveFrom DateTime @default(now())
+  calories      Int
+  proteinGrams  Decimal  @db.Decimal(7, 2)
+  carbsGrams    Decimal  @db.Decimal(7, 2)
+  fatGrams      Decimal  @db.Decimal(7, 2)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, effectiveFrom])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}

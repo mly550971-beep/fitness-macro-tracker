@@ -17,7 +17,7 @@ Node.js 20+, npm, and PostgreSQL 15+.
 3. Generate Prisma client: `npm run prisma:generate -w server`
 4. Apply schema: `npm run prisma:migrate -w server -- --name init`
 5. Start both apps: `npm run dev`
-6. Frontend: http://localhost:5173 ; API health: http://localhost:4000/api/health
+6. Frontend: https://mly550971-beep.github.io/fitness-macro-tracker/; API health: http://localhost:4000/api/health
 
 For local development, `COOKIE_SECURE=false` is expected. Set it to `true` behind HTTPS in production.
 
